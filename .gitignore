@@ -1,0 +1,21 @@
+# config
+.serverless
+
+# deps
+node_modules
+yarn-error.log
+
+# generated
+typechain
+
+# build
+lib
+dist
+build
+.build
+
+# env vars
+.env
+.env.dev
+.env.production
+.env.staging

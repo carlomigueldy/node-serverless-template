@@ -1,0 +1,30 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+      - stg
+      - dev
+
+jobs:
+  run-sls-deploy:
+    name: "Run Serverless Deploy"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Parse Env Vars
+        run: echo "${{ secrets.BASE64_ENV_VARS }}" | base64 --decode > ./.env
+
+      - name: Install Serverless Globally
+        run: npm i -g serverless
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Deploy
+        run: SERVERLESS_ACCESS_KEY=${{ secrets.SERVERLESS_ACCESS_KEY }} sls deploy
+
+      - run: echo "✅ This job's status is ${{ job.status }}."

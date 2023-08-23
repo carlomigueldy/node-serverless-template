@@ -1,0 +1,57 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    types:
+      - ready_for_review
+      - opened
+      - reopened
+    branches-ignore:
+      - ci/*
+      - devops/*
+      - automation/*
+      - main
+      - staging
+      - stg
+      - prod
+      - production
+      - master
+
+jobs:
+  run-lint:
+    if: ! github.event.pull_request.draft
+    name: "Run Lints"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Parse Env Vars
+        run: echo "${{ secrets.BASE64_ENV_VARS }}" | base64 --decode > ./.env
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Execute linter
+        run: yarn lint
+
+      - run: echo "✅ This job's status is ${{ job.status }}."
+
+  run-tests:
+    if: ! github.event.pull_request.draft
+    name: "Run Lints"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Parse Env Vars
+        run: echo "${{ secrets.BASE64_ENV_VARS }}" | base64 --decode > ./.env
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Execute linter
+        run: yarn test
+
+      - run: echo "✅ This job's status is ${{ job.status }}."

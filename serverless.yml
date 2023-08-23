@@ -1,0 +1,35 @@
+org: node-serverless-template
+app: node-serverless-template
+service: node-serverless-template
+frameworkVersion: "3"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+    noPrependStageInUrl: true
+    reloadHandler: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 512
+  timeout: 60
+  logs:
+    httpApi: true
+  httpApi:
+    # metrics: true # Enable if you need
+    cors: true
+
+functions:
+  api:
+    handler: handler.handler
+    events:
+      - httpApi:
+          path: "/{proxy+}"
+          method: "*"
+          cors: true
